@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,8 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -131,16 +129,21 @@ fun CalculatorApp() {
 
                 Text(
                     text = expression,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .alpha(0.9f),
                     textAlign = TextAlign.End,
-                    style = MaterialTheme.typography.displaySmall
-                )
+                    style = MaterialTheme.typography.displaySmall,
+                    color = MaterialTheme.colorScheme.inversePrimary,
+
+                    )
                 Text(
                     text = result,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.End,
                     style = MaterialTheme.typography.displayLarge,
                     maxLines = 1,
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
 
@@ -274,17 +277,17 @@ fun ButtonText(txt: String) {
 }
 
 fun calculateResult(exp: String): String {
-    try {
-        var context = Context.enter()
+    return try {
+        val context = Context.enter()
         context.setOptimizationLevel(-1)
-        var scriptable = context.initStandardObjects()
+        val scriptable = context.initStandardObjects()
         var finalResult = context.evaluateString(scriptable, exp, "Javascript", 1, null).toString()
         if (finalResult.endsWith(".0")) {
-            finalResult = finalResult.replace(".0", "");
+            finalResult = finalResult.replace(".0", "")
         }
-        return finalResult;
+        finalResult
     } catch (err: Exception) {
-        return "Err";
+        "Err"
     }
 }
 
